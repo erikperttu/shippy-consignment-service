@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	vesselProto "github.com/erikperttu/shippy-vessel-service/proto/vessel"
 	pb "github.com/erikperttu/shippy-consignment-service/proto/consignment"
+	vesselProto "github.com/erikperttu/shippy-vessel-service/proto/vessel"
 	"gopkg.in/mgo.v2"
 	"log"
 )
