@@ -4,6 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"os"
+
 	pb "github.com/erikperttu/shippy-consignment-service/proto/consignment"
 	userService "github.com/erikperttu/shippy-user-service/proto/user"
 	vesselProto "github.com/erikperttu/shippy-vessel-service/proto/vessel"
@@ -11,8 +14,6 @@ import (
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/server"
-	"log"
-	"os"
 )
 
 const (
@@ -40,17 +41,17 @@ func main() {
 
 	srv := micro.NewService(
 		// This name must match the package name given in your protobuf definition
-		micro.Name("go.micro.srv.consignment"),
+		micro.Name("shippy.consignment"),
 		micro.Version("latest"),
 		micro.WrapHandler(AuthWrapper),
 	)
 
-	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
+	vesselClient := vesselProto.NewVesselServiceClient("shippy.vessel", srv.Client())
 
 	srv.Init()
 
 	// Register
-	pb.RegisterShippingServiceHandler(srv.Server(), &service{session, vesselClient})
+	pb.RegisterConsignmentServiceHandler(srv.Server(), &service{session, vesselClient})
 
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)
@@ -78,7 +79,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		log.Println("Authenticating with token: ", token)
 
 		// Auth
-		authClient := userService.NewUserServiceClient("go.micro.srv.user", client.DefaultClient)
+		authClient := userService.NewUserServiceClient("shippy.user", client.DefaultClient)
 		_, err := authClient.ValidateToken(ctx, &userService.Token{
 			Token: token,
 		})
