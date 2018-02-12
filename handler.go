@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
+	"log"
+
 	pb "github.com/erikperttu/shippy-consignment-service/proto/consignment"
 	vesselProto "github.com/erikperttu/shippy-vessel-service/proto/vessel"
 	"gopkg.in/mgo.v2"
-	"log"
 )
 
 // Implement all methods from the protobuf def
@@ -20,9 +21,11 @@ func (s *service) GetRepo() Repository {
 
 // From consignment.pb.go
 //CreateConsignment(context.Context, *Consignment, *Response) error
-func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
+func (s *service) Create(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
 	repo := s.GetRepo()
 	defer repo.Close()
+
+	log.Println("Creating: ", req)
 
 	// Call the client instance of the vessel service with the weight and capacity
 	vesselResponse, err := s.vesselClient.FindAvailable(context.Background(), &vesselProto.Specification{
@@ -50,7 +53,7 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, re
 
 // From consignment.pb.go
 // GetConsignments(context.Context, *GetRequest, *Response) error
-func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
+func (s *service) Get(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
 	repo := s.GetRepo()
 	defer repo.Close()
 
