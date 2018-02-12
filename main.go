@@ -8,7 +8,7 @@ import (
 	"os"
 
 	pb "github.com/erikperttu/shippy-consignment-service/proto/consignment"
-	userService "github.com/erikperttu/shippy-user-service/proto/user"
+	userService "github.com/erikperttu/shippy-user-service/proto/auth"
 	vesselProto "github.com/erikperttu/shippy-vessel-service/proto/vessel"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"
